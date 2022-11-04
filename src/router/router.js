@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import isAuthGuard from "./auth-guard";
 // 1. Define route components. These can be imported from other files
 // 2. Define some routes Each route should map to a component. We'll talk about nested routes later.
 const routes = [
@@ -50,6 +51,7 @@ const routes = [
     {
         path: "/dbz",
         name: "dbz",
+        beforeEnter: [isAuthGuard],
         component: () =>
             import(
                 /* webpackChunkName: "DragonBallLayout" */ "@/modules/dbz/layout/DragonBallLayout"
@@ -105,22 +107,22 @@ const router = createRouter({
 // });
 
 // GUARD GLOBAL - Async
-const canAccess = () => {
-    return new Promise((resolve) => {
-        const random = Math.random() * 100;
-        if (random > 50) {
-            console.log("autenticado");
-            resolve(true);
-        } else {
-            console.warn("no autentificado", random);
-            resolve(false);
-        }
-    });
-};
+// const canAccess = () => {
+//     return new Promise((resolve) => {
+//         const random = Math.random() * 100;
+//         if (random > 50) {
+//             console.log("autenticado");
+//             resolve(true);
+//         } else {
+//             console.warn("no autentificado", random);
+//             resolve(false);
+//         }
+//     });
+// };
 
-router.beforeEach(async (to, from, next) => {
-    const auth = await canAccess();
-    auth ? next() : next({ name: "pokemon-home" });
-});
+// router.beforeEach(async (to, from, next) => {
+//     const auth = await canAccess();
+//     auth ? next() : next({ name: "pokemon-home" });
+// });
 
 export default router;
