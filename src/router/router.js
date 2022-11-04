@@ -90,4 +90,37 @@ const router = createRouter({
     routes, // short for `routes: routes`
 });
 
+// GUARD GLOBAL - Sync
+// router.beforeEach((to, from, next) => {
+//     console.log({ to, from, next });
+
+//     const random = Math.random() * 100;
+//     if (random > 50) {
+//         console.log("autentificado");
+//         next();
+//     } else {
+//         console.warn("no autentificado", random);
+//         next({ name: "pokemon-home" });
+//     }
+// });
+
+// GUARD GLOBAL - Async
+const canAccess = () => {
+    return new Promise((resolve) => {
+        const random = Math.random() * 100;
+        if (random > 50) {
+            console.log("autenticado");
+            resolve(true);
+        } else {
+            console.warn("no autentificado", random);
+            resolve(false);
+        }
+    });
+};
+
+router.beforeEach(async (to, from, next) => {
+    const auth = await canAccess();
+    auth ? next() : next({ name: "pokemon-home" });
+});
+
 export default router;
